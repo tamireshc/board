@@ -147,7 +147,7 @@ export const getServerSideProps: GetServerSideProps = async ({ req }) => {
 
   const fetchPost = async () => {
     let tasks
-    const q = query(collection(db, "tasks"), where("email", "==", session.user?.email), orderBy('created', 'asc'));
+    const q = query(collection(db, "tasks"), where("email", "==", session.user?.email), orderBy('created', 'desc'));
 
     await getDocs(q)
       .then((querySnapshot) => {
