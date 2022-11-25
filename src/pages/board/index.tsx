@@ -7,9 +7,9 @@ import { GetServerSideProps } from 'next';
 import { getSession } from 'next-auth/react';
 import React, { FormEvent } from 'react';
 import { db } from '../../Models/firebaseConnection'
-import { addDoc, collection, getDocs, orderBy, query, where } from 'firebase/firestore';
+import { addDoc, collection, getDocs, orderBy, query, where, deleteDoc, doc, updateDoc } from 'firebase/firestore';
 import { format } from 'date-fns'
-
+import Router from 'next/router'
 
 interface IUser {
   nome: string;
@@ -21,19 +21,21 @@ interface IProps {
   user: IUser;
   data: string;
 }
-interface ITaskCreated {
+interface ITask {
   id: string;
   created: Date
   createdFormated: string;
   task: string;
   email: string;
   nome: string;
-
 }
+
 const Board = (props: IProps) => {
 
   const [input, setInput] = React.useState('');
-  const [tasklist, setTaskList] = React.useState<ITaskCreated[]>(JSON.parse(props.data))
+  const [tasklist, setTaskList] = React.useState<ITask[]>(JSON.parse(props.data))
+  const [isTaskEdit, setIsTaskEdit] = React.useState(false)
+  const [taskOnEdit, setTaskOnEdit] = React.useState<ITask | null>(null)
 
   const handleAddTask = async (event: FormEvent) => {
     event.preventDefault()
@@ -41,6 +43,22 @@ const Board = (props: IProps) => {
       alert('preencha alguma tarefa')
       return;
     }
+
+    if (taskOnEdit) {
+      const taskRef = doc(db, "tasks", taskOnEdit.id);
+      await updateDoc(taskRef, {
+        task: input
+      });
+      const indexTaskEdit = tasklist.findIndex((item) => item.id === taskOnEdit.id)
+      const tasks = tasklist
+      tasks[indexTaskEdit].task = input
+      setInput('')
+      setTaskList(tasks)
+      setIsTaskEdit(false)
+      setTaskOnEdit(null)
+      return;
+    }
+
     try {
       console.log('chegou', props.user.nome)
       await addDoc(collection(db, "tasks"), {
@@ -60,17 +78,42 @@ const Board = (props: IProps) => {
         }
         setInput('')
         setTaskList([...tasklist, data])
-
       });
-
 
     } catch (error) {
       console.error("Error adding document: ", error);
     }
+  }
 
+  const handleDelete = async (id: string) => {
+    await deleteDoc(doc(db, "tasks", id));
+    const updatetasks = tasklist.filter((item) => item.id !== id)
+    setTaskList(updatetasks)
+  }
+
+  const handleEditTask = async (task: ITask) => {
+    setInput(task.task)
+    setTaskOnEdit(task)
+    setIsTaskEdit(true)
+  }
+
+  const handleCancelEdit = () => {
+    setInput('');
+    setIsTaskEdit(false)
+  }
+
+  const handleRedirectTask = (task: ITask) => {
+    console.log(task)
+    Router.push(`/board/${task.id}`)
+    // return {
+    //   redirect:{
+    //     destination: `/oba`,
+    //     permanent: false,
+    //   }
+    // }
 
   }
-  console.log(tasklist)
+
 
   return (
     <>
@@ -79,6 +122,15 @@ const Board = (props: IProps) => {
       </Head>
       <main className={styles.container}>
         <div className={styles.tasksContainer}>
+          {isTaskEdit &&
+            <h2 className={styles.titleEdited}>Tarefa em edição
+              <button
+                className={styles.buttonEdit}
+                onClick={handleCancelEdit}
+              >
+                X
+              </button>
+            </h2>}
           <form
             className={styles.form}
             onSubmit={handleAddTask}
@@ -90,21 +142,22 @@ const Board = (props: IProps) => {
             />
             <button>+</button>
           </form>
+
           <h1>Você tem {tasklist.length} {tasklist.length === 1 ? 'tarefa' : 'tarefas'}</h1>
 
           {tasklist.map((item) =>
             <div key={item.id} className={styles.alltasks}>
-              <p>{item.task}</p>
+              <p onClick={() => handleRedirectTask(item)}>{item.task}</p>
               <div className={styles.tasks}>
                 <div>
                   <AiOutlineCalendar />
                   <p>{item.createdFormated}</p>
                 </div>
-                <div>
+                <div onClick={() => handleEditTask(item)} className={styles.button}>
                   <BiPencil />
                   <p>Editar</p>
                 </div>
-                <div>
+                <div onClick={() => handleDelete(item.id)} className={styles.button}>
                   <BiTrashAlt color='#FF3636' />
                   <p>Excluir</p>
                 </div>
@@ -118,14 +171,10 @@ const Board = (props: IProps) => {
             <p>Última doação foi a 3 dias.</p>
           </div>
         </div>
-
-
       </main>
       <SupportButton />
-
     </>
   )
-
 }
 
 export const getServerSideProps: GetServerSideProps = async ({ req }) => {
@@ -140,10 +189,6 @@ export const getServerSideProps: GetServerSideProps = async ({ req }) => {
       }
     }
   }
-
-  // const q = query(collection(db, "cities"), where("capital", "==", true));
-
-  // const querySnapshot = await getDocs(q);
 
   const fetchPost = async () => {
     let tasks
@@ -164,15 +209,14 @@ export const getServerSideProps: GetServerSideProps = async ({ req }) => {
       })
     // console.log(tasks)
     return tasks
-
   }
+
   const data = await fetchPost()
 
   const user = {
     nome: session?.user?.name,
     id: session?.expires,
     email: session?.user?.email,
-
   }
 
   return {

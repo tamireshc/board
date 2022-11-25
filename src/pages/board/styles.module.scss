@@ -16,6 +16,9 @@
     color: #FFF;
     font-weight: 500;
   }
+  p{
+    color: #FFF;
+  }
 }
 
 .form{
@@ -38,6 +41,39 @@
   }
 }
 
+.titleEdited{
+  color: #FFBA00;
+}
+
+.dataContainer{
+  display: flex;
+  align-items: center;
+  svg{
+    width: 30px;
+    height: 30px;
+  }
+  p{
+    margin-left: 10px;
+
+    span{
+      color: #FFBA00;
+      margin-left: 10px;
+    }
+  }
+}
+
+.buttonEdit{
+  color:red;
+  background-color: transparent;
+  border: none;
+  font-size: 1.4rem;
+
+}
+
+.button{
+  cursor: pointer;
+}
+
 .alltasks{
   background-color:#373c504f ;
   border-radius: 10px;
@@ -46,6 +82,7 @@
   p:first-child{
     color: #FFF;
     font-size: 0.9rem;
+    cursor: pointer;
   }
 }
 
