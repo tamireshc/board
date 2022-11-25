@@ -1,0 +1,54 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 80px;
+
+  h1 {
+    font-size: 2rem;
+  }
+
+  .imgRoquet {
+    margin-bottom: 40px;
+  }
+
+  p {
+    font-weight: bold;
+
+    span {
+      color: green;
+    }
+  }
+
+  p:nth-child(5) {
+    background-color: rgb(235, 230, 224);
+    padding: 10px;
+  }
+
+  button {
+    background-color: #FFBA00;
+    border: none;
+    padding: 5px 50px;
+    border-radius: 5px;
+  }
+}
+
+.containerSupporter {
+  background-color: rgb(30, 172, 30);
+  display: flex;
+  border-radius: 10px;
+  padding: 15px 10px;
+
+  img {
+    border-radius: 50%;
+    height: 50px;
+    width: 50px;
+    margin-right: 10px;
+  }
+
+  p {
+    color: #fff;
+    font-weight: 400;
+  }
+}

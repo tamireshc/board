@@ -11,27 +11,30 @@
   align-items: center;
   justify-content: center;
 
-  img{
+  img {
     cursor: pointer;
   }
 
-  nav{
+  nav {
     margin-left: 5rem;
     height: 5rem;
-    a{
+
+    a {
       display: inline-block;
       position: relative;
       padding: 0 0.5rem;
       height: 5rem;
       line-height: 5rem;
-      color:#FFF; 
-      &+a{
+      color: #FFF;
+
+      &+a {
         margin-left: 2rem;
       }
     }
   }
-  button{
+
+  button {
     margin-left: auto;
   }
-  
+
 }

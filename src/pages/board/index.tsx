@@ -21,6 +21,7 @@ interface IProps {
   user: IUser;
   data: string;
 }
+
 interface ITask {
   id: string;
   created: Date
@@ -60,7 +61,6 @@ const Board = (props: IProps) => {
     }
 
     try {
-      console.log('chegou', props.user.nome)
       await addDoc(collection(db, "tasks"), {
         created: new Date(),
         task: input,
@@ -105,15 +105,7 @@ const Board = (props: IProps) => {
   const handleRedirectTask = (task: ITask) => {
     console.log(task)
     Router.push(`/board/${task.id}`)
-    // return {
-    //   redirect:{
-    //     destination: `/oba`,
-    //     permanent: false,
-    //   }
-    // }
-
   }
-
 
   return (
     <>
@@ -179,7 +171,6 @@ const Board = (props: IProps) => {
 
 export const getServerSideProps: GetServerSideProps = async ({ req }) => {
   const session = await getSession({ req })
-  // console.log(session)
 
   if (!session) {
     return {
@@ -207,7 +198,6 @@ export const getServerSideProps: GetServerSideProps = async ({ req }) => {
 
         tasks = newData
       })
-    // console.log(tasks)
     return tasks
   }
 

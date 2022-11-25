@@ -1,38 +1,40 @@
-.container{
+.container {
   display: flex;
   flex-direction: column;
   align-items: center;
- 
+
 }
 
-.tasksContainer{
+.tasksContainer {
   background-color: var(--mainColor);
   width: 900px;
   padding: 2rem;
   border-radius: 10px;
   margin: 2rem 0;
 
-  h1{
+  h1 {
     color: #FFF;
     font-weight: 500;
   }
-  p{
+
+  p {
     color: #FFF;
   }
 }
 
-.form{
+.form {
   display: flex;
-  input{
-    background:#373c504f ;
+
+  input {
+    background: #373c504f;
     width: 100%;
     padding: 0.6rem;
     border: none;
     border-radius: 10px;
-    color:white;
+    color: white;
   }
 
-  button{
+  button {
     background-color: #FFBA00;
     padding: 1rem 2rem;
     border-radius: 10px;
@@ -41,102 +43,113 @@
   }
 }
 
-.titleEdited{
+.titleEdited {
   color: #FFBA00;
 }
 
-.dataContainer{
+.dataContainer {
   display: flex;
   align-items: center;
-  svg{
+
+  svg {
     width: 30px;
     height: 30px;
   }
-  p{
+
+  p {
     margin-left: 10px;
 
-    span{
+    span {
       color: #FFBA00;
       margin-left: 10px;
     }
   }
 }
 
-.buttonEdit{
-  color:red;
+.buttonEdit {
+  color: red;
   background-color: transparent;
   border: none;
   font-size: 1.4rem;
 
 }
 
-.button{
+.button {
   cursor: pointer;
 }
 
-.alltasks{
-  background-color:#373c504f ;
+.alltasks {
+  background-color: #373c504f;
   border-radius: 10px;
   padding: 0.2rem 1rem;
   margin-bottom: 15px;
-  p:first-child{
+
+  p:first-child {
     color: #FFF;
     font-size: 0.9rem;
     cursor: pointer;
   }
 }
 
-.tasks{
+.tasks {
   display: flex;
-  div{
+
+  div {
     display: flex;
     align-items: center;
   }
-   div:nth-child(1){
-    color:#FFBA00;
-    p{
+
+  div:nth-child(1) {
+    color: #FFBA00;
+
+    p {
       margin-left: 10px;
     }
   }
-  div:nth-child(2){
-    color:#FFF;
+
+  div:nth-child(2) {
+    color: #FFF;
     margin: 0px 10px;
   }
 
-  div:nth-child(3){
-    color:#FFF;
+  div:nth-child(3) {
+    color: #FFF;
     margin-left: auto;
   }
 }
 
 
-.tasksContainer{
-background-color: var(--mainColor);
+.tasksContainer {
+  background-color: var(--mainColor);
 }
 
-.acknowledgmentContainer{
+.acknowledgmentContainer {
   background-color: var(--mainColor);
   width: 900px;
   padding: 0rem 1rem;
   border-radius: 10px;
   margin-bottom: 40px;
-  
-  h2{
-    color:#FFBA00;
+
+  h2 {
+    color: #FFBA00;
     font-weight: 700;
   }
-  div{
+
+  div {
     display: flex;
     align-items: center;
-    svg,p{
+
+    svg,
+    p {
       color: #FFF;
     }
-    p{
+
+    p {
       font-size: 1.2rem;
       font-weight: 400;
     }
 
-    svg{
+    svg {
       height: 25px;
       width: 25px;
       margin-right: 10px;
