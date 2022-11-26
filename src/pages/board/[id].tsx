@@ -1,4 +1,4 @@
-import { doc, getDoc } from 'firebase/firestore';
+import { collection, doc, getDoc, getDocs, query, where } from 'firebase/firestore';
 import { GetServerSideProps } from 'next';
 import { getSession } from 'next-auth/react';
 import { db } from '../../Models/firebaseConnection';
@@ -14,6 +14,7 @@ interface ITask {
   email: string;
   nome: string;
 }
+
 
 const Task = (props: any) => {
   const task: ITask = JSON.parse(props.data)
@@ -37,7 +38,7 @@ export const getServerSideProps: GetServerSideProps = async ({ req, params }) =>
   const session = await getSession({ req })
   const { id } = params as any
   // console.log('paramns', params)
-  // console.log(session)
+  console.log('session', session)
   if (!session) {
     return {
       redirect: {
@@ -57,6 +58,31 @@ export const getServerSideProps: GetServerSideProps = async ({ req, params }) =>
   }
 
   const dataJson = JSON.stringify(newdata)
+
+  let getUser: any
+
+  const q = query(collection(db, "users"), where("image", "==", session.user?.image));
+  const userSnap = await getDocs(q)
+    .then((querySnapshot) => {
+      const user = (querySnapshot.docs
+        .map((doc) => (
+          {
+            ...doc.data(),
+            lastDonate: format(doc.data().lastDonate.toDate(), 'dd MMMM yyyy')
+          }
+        )));
+      getUser = user
+    })
+  console.log(getUser)
+
+  if (getUser && !getUser[0].donate) {
+    return {
+      redirect: {
+        destination: '/board',
+        permanent: false,
+      }
+    }
+  }
 
   return {
     props: {

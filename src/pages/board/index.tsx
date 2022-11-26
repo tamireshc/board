@@ -8,8 +8,11 @@ import { getSession } from 'next-auth/react';
 import React, { FormEvent } from 'react';
 import { db } from '../../Models/firebaseConnection'
 import { addDoc, collection, getDocs, orderBy, query, where, deleteDoc, doc, updateDoc } from 'firebase/firestore';
-import { format } from 'date-fns'
+import { format, formatDistance } from 'date-fns'
+import { ptBR } from 'date-fns/locale'
 import Router from 'next/router'
+
+
 
 interface IUser {
   nome: string;
@@ -20,6 +23,7 @@ interface IUser {
 interface IProps {
   user: IUser;
   data: string;
+  getUserDBJSON: string;
 }
 
 interface ITask {
@@ -37,6 +41,8 @@ const Board = (props: IProps) => {
   const [tasklist, setTaskList] = React.useState<ITask[]>(JSON.parse(props.data))
   const [isTaskEdit, setIsTaskEdit] = React.useState(false)
   const [taskOnEdit, setTaskOnEdit] = React.useState<ITask | null>(null)
+  const userDB = JSON.parse(props.getUserDBJSON)
+  console.log('userdb', userDB)
 
   const handleAddTask = async (event: FormEvent) => {
     event.preventDefault()
@@ -145,10 +151,10 @@ const Board = (props: IProps) => {
                   <AiOutlineCalendar />
                   <p>{item.createdFormated}</p>
                 </div>
-                <div onClick={() => handleEditTask(item)} className={styles.button}>
+                {userDB[0].donate && <div onClick={() => handleEditTask(item)} className={styles.button}>
                   <BiPencil />
                   <p>Editar</p>
-                </div>
+                </div>}
                 <div onClick={() => handleDelete(item.id)} className={styles.button}>
                   <BiTrashAlt color='#FF3636' />
                   <p>Excluir</p>
@@ -156,13 +162,13 @@ const Board = (props: IProps) => {
               </div>
             </div>)}
         </div>
-        <div className={styles.acknowledgmentContainer}>
+        {userDB[0].donate && <div className={styles.acknowledgmentContainer}>
           <h2>Obrigado por apoiar esse projeto</h2>
           <div>
             <BiTimeFive />
-            <p>Última doação foi a 3 dias.</p>
+            <p>Última doação foi a {formatDistance(new Date(userDB[0].lastDonate), new Date(), { locale: ptBR })} </p>
           </div>
-        </div>
+        </div>}
       </main>
       <SupportButton />
     </>
@@ -209,8 +215,24 @@ export const getServerSideProps: GetServerSideProps = async ({ req }) => {
     email: session?.user?.email,
   }
 
+  let getUserDB: any
+
+  const q = query(collection(db, "users"), where("image", "==", session.user?.image));
+  const userSnap = await getDocs(q)
+    .then((querySnapshot) => {
+      const user = (querySnapshot.docs
+        .map((doc) => (
+          {
+            ...doc.data(),
+            lastDonate: format(doc.data().lastDonate.toDate(), 'dd MMMM yyyy')
+          }
+        )));
+      getUserDB = user
+    })
+  const getUserDBJSON = JSON.stringify(getUserDB)
+
   return {
-    props: { user, data }
+    props: { user, data, getUserDBJSON }
   }
 }
 
