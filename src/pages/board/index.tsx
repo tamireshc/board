@@ -130,10 +130,10 @@ const Board = (props: IProps) => {
                   <AiOutlineCalendar />
                   <p>{item.createdFormated}</p>
                 </div>
-                {userDB[0].donate && <div onClick={() => handleEditTask(item)} className={styles.button}>
+                <div onClick={() => handleEditTask(item)} className={styles.button}>
                   <BiPencil />
                   <p>Editar</p>
-                </div>}
+                </div>
                 <div onClick={() => handleDelete(item.id)} className={styles.button}>
                   <BiTrashAlt color='#FF3636' />
                   <p>Excluir</p>
