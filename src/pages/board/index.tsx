@@ -11,29 +11,9 @@ import { addDoc, collection, getDocs, orderBy, query, where, deleteDoc, doc, upd
 import { format, formatDistance } from 'date-fns'
 import { ptBR } from 'date-fns/locale'
 import Router from 'next/router'
+import { ITask } from '../../interfaces/task';
+import { IProps } from '../../interfaces/user';
 
-
-
-interface IUser {
-  nome: string;
-  id: string;
-  email: string,
-}
-
-interface IProps {
-  user: IUser;
-  data: string;
-  getUserDBJSON: string;
-}
-
-interface ITask {
-  id: string;
-  created: Date
-  createdFormated: string;
-  task: string;
-  email: string;
-  nome: string;
-}
 
 const Board = (props: IProps) => {
 
@@ -42,7 +22,6 @@ const Board = (props: IProps) => {
   const [isTaskEdit, setIsTaskEdit] = React.useState(false)
   const [taskOnEdit, setTaskOnEdit] = React.useState<ITask | null>(null)
   const userDB = JSON.parse(props.getUserDBJSON)
-  console.log('userdb', userDB)
 
   const handleAddTask = async (event: FormEvent) => {
     event.preventDefault()

@@ -1,21 +1,8 @@
 /** @type {import('next').NextConfig} */
-const nextConfig = {
-  reactStrictMode: true,
-  swcMinify: true,
+module.exports = {
   images: {
-    disableStaticImages: true,
-    formats: ['image/avif', 'image/webp'],
-    remotePatterns: [
-      {
-        protocol: 'https',
-        hostname: 'avatars.githubusercontent.com',
-        port: '',
-        pathname: '/image/upload/**',
-      },
-    ],
-  }
+    domains: ['avatars.githubusercontent.com'],
+  },
 }
-
-module.exports = nextConfig
 
 

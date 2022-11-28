@@ -5,15 +5,7 @@ import { db } from '../../Models/firebaseConnection';
 import { format } from 'date-fns'
 import styles from './styles.module.scss'
 import { BiCalendar } from "react-icons/bi";
-
-interface ITask {
-  id: string;
-  created: Date
-  createdFormated: string;
-  task: string;
-  email: string;
-  nome: string;
-}
+import { ITask } from '../../interfaces/task';
 
 
 const Task = (props: any) => {
@@ -37,8 +29,7 @@ export default Task
 export const getServerSideProps: GetServerSideProps = async ({ req, params }) => {
   const session = await getSession({ req })
   const { id } = params as any
-  // console.log('paramns', params)
-  //console.log('session', session)
+
   if (!session) {
     return {
       redirect: {
@@ -50,10 +41,9 @@ export const getServerSideProps: GetServerSideProps = async ({ req, params }) =>
 
   const docRef = doc(db, "tasks", id);
   const docSnap = await getDoc(docRef)
-  // console.log('docSnap', docSnap.data().email, docSnap.task, docSnap.id)
 
-  if (!docSnap?.data()?.email) {
-    console.log(' nao existe')
+
+  if (!docSnap?.data()?.task) {
     return {
       redirect: {
         destination: '/board',
@@ -84,7 +74,7 @@ export const getServerSideProps: GetServerSideProps = async ({ req, params }) =>
         )));
       getUser = user
     })
-  //console.log(getUser)
+
 
   if (getUser && !getUser[0].donate) {
     return {

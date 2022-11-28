@@ -1,17 +1,9 @@
 import { GetServerSideProps } from "next"
 import { getSession } from "next-auth/react"
 import Head from "next/head"
+import { IUserProp } from "../../interfaces/user"
 import styles from './styles.module.scss'
 
-interface IUser {
-  nome: string;
-  image: string;
-  email: string,
-}
-
-interface IUserProp {
-  user: IUser
-}
 
 const donate = ({ user }: IUserProp) => {
   return (
