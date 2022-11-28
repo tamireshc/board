@@ -38,7 +38,7 @@ export const getServerSideProps: GetServerSideProps = async ({ req, params }) =>
   const session = await getSession({ req })
   const { id } = params as any
   // console.log('paramns', params)
-  console.log('session', session)
+  //console.log('session', session)
   if (!session) {
     return {
       redirect: {
@@ -50,6 +50,17 @@ export const getServerSideProps: GetServerSideProps = async ({ req, params }) =>
 
   const docRef = doc(db, "tasks", id);
   const docSnap = await getDoc(docRef)
+  // console.log('docSnap', docSnap.data().email, docSnap.task, docSnap.id)
+
+  if (!docSnap?.data()?.email) {
+    console.log(' nao existe')
+    return {
+      redirect: {
+        destination: '/board',
+        permanent: false,
+      }
+    }
+  }
 
   const newdata = {
     ...docSnap.data(),
@@ -73,7 +84,7 @@ export const getServerSideProps: GetServerSideProps = async ({ req, params }) =>
         )));
       getUser = user
     })
-  console.log(getUser)
+  //console.log(getUser)
 
   if (getUser && !getUser[0].donate) {
     return {
